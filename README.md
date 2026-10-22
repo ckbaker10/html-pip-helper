@@ -1,25 +1,32 @@
 # HTML PiP Helper
 
-Kleine Firefox-Erweiterung für Android. Unterstützt laufende HTML5-Videos auch in
-eingebetteten Playern anderer Domains, ohne zusätzliche Buttons einzublenden.
+A small Firefox extension for Android that helps HTML5 videos keep playing in the
+background, including players embedded from other domains. It adds no buttons.
 
-## Benutzung
+## Set up your phone
 
-1. Videoseite öffnen und Wiedergabe im Player starten.
-2. Über den vorhandenen Vollbildknopf des Players das Video im Vollbild öffnen.
-3. Android-Home drücken oder zum Startbildschirm wischen. Das Video läuft im
-   nativen schwebenden Android-Fenster weiter.
+Follow the [Android setup guide with screenshots](docs/ANDROID_SETUP.md) to install
+the extension, allow picture-in-picture, and configure Firefox's battery usage.
+For locked-screen playlist playback, **Allow background usage** must be enabled
+and **Unrestricted** selected on the tested Android device. Allowing PiP alone
+does not grant background network access.
 
-Firefox muss in Android unter „Spezieller App-Zugriff → Bild-in-Bild“ erlaubt sein.
-Ein laufendes Video ist erforderlich. Für den beobachteten Decodierungsfehler
-nach schnellen Home-Wechseln enthält das Add-on eine begrenzte Wiederherstellung.
-Gesperrte Videos, andere Playerfehler oder ein fehlendes `allowfullscreen` im
-einbettenden Frame werden dadurch nicht behoben.
-Die vorhandenen Player- und Browser-Steuerelemente bleiben für PiP zuständig.
+## Use picture-in-picture
 
-## Bauen und lokal testen
+1. Open a video page and start playback in its player.
+2. Use the player's existing fullscreen button.
+3. Press Android Home or swipe to the home screen. Firefox moves the video into
+   Android's native floating window.
 
-Voraussetzungen: Node.js 22+, npm, für Verhaltenstests FFmpeg und Playwright Firefox.
+Android must allow Firefox to use picture-in-picture. A video must already be
+playing. The extension includes limited recovery for the decoding error observed
+after rapid Home transitions. It does not repair protected videos, unrelated
+player errors, or a missing `allowfullscreen` permission on an embedding frame.
+The existing player and browser controls remain responsible for entering PiP.
+
+## Build and test locally
+
+Requirements: Node.js 22+, npm, and, for behavior tests, FFmpeg and Playwright Firefox.
 
 ```sh
 npm ci
@@ -29,149 +36,140 @@ npm test
 npm run build
 ```
 
-Paket: `dist/html-pip-helper-0.1.3.xpi`.
+Package: `dist/html-pip-helper-0.1.3.xpi`.
 
-Die XPI ist **unsigniert**. Für eine normale dauerhafte Installation in Firefox
-muss sie von Mozilla signiert werden, auch bei privater Verteilung außerhalb des
-Add-on-Katalogs. In dieser Projektphase wird nichts veröffentlicht und kein
-Mozilla-Konto benötigt. Für Entwicklung ist temporäres Laden per `web-ext`
-vorgesehen:
+This XPI is **unsigned**. A permanent installation in release Firefox requires
+Mozilla signing, including private distribution outside the add-on catalog.
+Building and testing locally does not require a Mozilla account or submit the
+extension to Mozilla. For development, load it temporarily using `web-ext` on a
+dedicated emulator:
 
 ```sh
-export PATH="/pfad/zum/android-sdk/platform-tools:$PATH"
+export PATH="/path/to/android-sdk/platform-tools:$PATH"
 npx web-ext run --source-dir extension --target firefox-android \
   --adb-device emulator-5554 --firefox-apk org.mozilla.firefox
 ```
 
-In Firefox dazu „Einstellungen → Erweitert → Fern-Debugging über USB“ aktivieren.
-Temporäre Erweiterungen verschwinden beim Browserneustart. Private Fenster müssen
-bei Bedarf separat für die Erweiterung freigegeben werden.
+Enable **Settings → Advanced → Remote debugging via USB** in Firefox for this
+development workflow. Temporary extensions disappear when Firefox restarts.
+Private tabs may require a separate extension permission.
 
-## Ohne ADB auf dem eigenen Android installieren
+## Install on Android without ADB
 
-Für den normalen Firefox zuerst die XPI privat von Mozilla signieren lassen:
+First obtain a Mozilla-signed XPI for release Firefox:
 
-1. Im [Mozilla Developer Hub](https://addons.mozilla.org/de/developers/addon/submit/distribution)
-   mit einem Mozilla-Konto anmelden und ein neues Add-on einreichen.
-2. **On your own / selbst verteilen** wählen. Die Erweiterung wird dadurch nicht
-   öffentlich im Add-on-Katalog angeboten.
-3. `dist/html-pip-helper-0.1.3.xpi` hochladen, Android-Kompatibilität auswählen
-   und die Einreichung abschließen. Der enthaltene JavaScript-Code ist lesbar;
-   er wurde weder minimiert noch aus anderen Quellen kompiliert.
-4. Nach der Prüfung die **signierte** XPI herunterladen. Mozilla nennt bis zu
-   24 Stunden, bei manueller Prüfung kann es länger dauern.
-5. Die signierte XPI auf dem Android-Gerät speichern.
-6. In Firefox **Einstellungen → Über Firefox** öffnen und das Firefox-Logo
-   fünfmal schnell antippen.
-7. Zurück zu **Einstellungen → Erweiterung aus Datei installieren** gehen,
-   die signierte XPI auswählen und die Installation bestätigen.
+1. Sign in to the [Mozilla Developer Hub](https://addons.mozilla.org/en-US/developers/addon/submit/distribution)
+   and submit a new add-on.
+2. Choose **On your own** for self-distribution without a public catalog listing.
+3. Upload `dist/html-pip-helper-0.1.3.xpi`, select Android compatibility, and finish
+   the submission. The JavaScript is readable, with no minification or compilation
+   from another source language.
+4. Download the signed XPI once signing and any required review are complete.
+5. Follow the [installation steps in the Android setup guide](docs/ANDROID_SETUP.md#1-install-and-enable-the-extension).
 
-Eine Git-Hosting-Plattform wird dafür nicht benötigt. Dieses Projekt wurde
-noch nicht bei Mozilla eingereicht; die lokale XPI ist weiterhin unsigniert.
-Eine neue Version muss erneut signiert werden. Automatische Updates sind in
-dieser ersten Version nicht konfiguriert.
+The local build remains unsigned until this signing process is completed. Each
+new version must be signed again. Automatic updates for self-distributed packages
+are not configured in this version.
 
-Quellen: [Einreichen](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/),
-[Signieren](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/),
-[Installation auf Android](https://extensionworkshop.com/documentation/publish/install-self-distributed/).
+References: [submission](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/),
+[signing](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/),
+[installation on Android](https://extensionworkshop.com/documentation/publish/install-self-distributed/).
 
-## Android-Emulatortest
+## Android emulator test
 
-Der vorhandene Audiobook-Emulator `AudiobookStack_Functional_API34` wird benutzt.
-`scripts/android-test.mjs` setzt Firefox Android, ADB und geckodriver voraus und
-verwendet ein **nach dem Test gelöschtes Browserprofil**. Geckodriver setzt beim
-Start die Firefox-Appdaten auf dem Testemulator zurück. Deshalb ausschließlich
-auf einem dedizierten Emulator ohne persönliche Firefox-Daten ausführen.
-Keine anderen Tests gleichzeitig auf demselben Emulator starten.
+`scripts/android-test.mjs` requires Firefox for Android, ADB, and geckodriver. It
+uses a **browser profile that is deleted after testing**. Geckodriver resets
+Firefox's app data on the emulator at startup. Run this test only on a dedicated
+emulator without personal Firefox data, never on your everyday phone. Do not run
+other tests on the same emulator at the same time.
 
-Lokale Testeingaben (ignoriert, nicht im Repository):
+Local test inputs are ignored and are not included in the repository:
 
-- `work/firefox.apk`: Firefox Android 158.0.2, x86_64, von Mozillas Release-Server.
-- `work/geckodriver`: geckodriver 0.37.1 aus dem offiziellen GitHub-Release.
-- `work/ublock.xpi`: signiertes uBlock Origin 1.75.0 von addons.mozilla.org.
+- `work/firefox.apk`: Firefox for Android 158.0.2, x86_64, from Mozilla's release server.
+- `work/geckodriver`: geckodriver 0.37.1 from its official release.
+- `work/ublock.xpi`: signed uBlock Origin 1.75.0.
 
 ```sh
 npm run build
-export PATH="/pfad/zum/android-sdk/platform-tools:$PATH"
-export ADB="/pfad/zum/android-sdk/platform-tools/adb"
+export PATH="/path/to/android-sdk/platform-tools:$PATH"
+export ADB="/path/to/android-sdk/platform-tools/adb"
 export GECKODRIVER="$PWD/work/geckodriver"
 export ANDROID_SERIAL=emulator-5554
 npm run test:android
 ```
 
-Der Test installiert uBlock Origin und dieses Add-on, schließt die nativen
-Installationsbestätigungen und prüft einen extern eingebetteten lokalen Testclip.
-Er verlangt einen Firefox-Task mit `mode=pinned` **und** fortschreitende Videozeit
-bei `paused=false`. Mit `ANDROID_LIVE_TEST=1` und `ANDROID_LIVE_URL` prüft er danach
-zusätzlich eine selbst angegebene Videoseite. Beide Variablen beim Aufruf von
-`npm run test:android` setzen. Optional legen `ANDROID_LIVE_FRAME`,
-`ANDROID_LIVE_PLAY` und `ANDROID_LIVE_FULLSCREEN` die CSS-Selektoren für einen
-einbettenden Frame sowie Wiedergabe- und Vollbildknöpfe fest. Ohne diese Optionen
-wird ein Video im Hauptdokument über das Videoelement bedient.
-Zusätzliche Tabs werden geschlossen, uBlock wird dafür nicht abgeschaltet.
-Die Live-Prüfung hängt von der Erreichbarkeit und Bedienbarkeit des Players ab.
+The test installs uBlock Origin and this extension, dismisses native installation
+prompts, and checks a local clip inside a frame from another origin. It requires
+both a Firefox task with `mode=pinned` and advancing video time with `paused=false`.
+Set `ANDROID_LIVE_TEST=1` and `ANDROID_LIVE_URL` when invoking
+`npm run test:android` to check a video page of your choice afterward.
+Optional `ANDROID_LIVE_FRAME`, `ANDROID_LIVE_PLAY`, and `ANDROID_LIVE_FULLSCREEN`
+variables specify CSS selectors for an embedding frame and the play and
+fullscreen controls. Without them, the test operates a video in the main document.
+Extra tabs are closed; the content blocker remains enabled. Live checks depend
+on the availability of the page and its player.
 
-Testdaten, Screenshots, Protokolle und SHA-256-Nachweise liegen ausschließlich in
-`work/`. Details zu den verifizierten Ergebnissen: [TESTING.md](TESTING.md).
+Raw test data, diagnostic screenshots, logs, and SHA-256 evidence stay in ignored
+`work/`. Only reviewed setup screenshots are published in `docs/images/`.
+See [TESTING.md](TESTING.md) for verified results and their limits.
 
-## Berechtigungen und Grenzen
+## Permissions and limitations
 
-Die Erweiterung läuft in HTTP-/HTTPS-Seiten und allen Frames. Die breite
-Seitenauswahl ist nötig, weil Webseiten Videos auf wechselnden externen
-Hosterdomains einbetten. Die Erweiterung blendet keine eigenen Steuerelemente ein
-und enthält keine Netzwerkzugriffe, Telemetrie oder Datensammlung.
-Sie speichert keine Video-URLs und extrahiert keine Streams.
+The extension runs on HTTP and HTTPS pages and in all frames. Broad matching is
+needed because pages can embed videos from changing external host domains. It
+adds no controls and makes no network requests. It collects no telemetry or other
+data, stores no video URLs, and does not extract streams.
 
-PiP-Sperren über `disablepictureinpicture` werden bereits vor dem Videostart
-entfernt. Das gilt auch für später eingefügte Videos, verschachtelte Player und
-erneut gesetzte Sperrattribute. Position, Breite und sonstiges Videolayout werden
-dabei nicht verändert; pausierte Videos werden dadurch nicht gestartet.
+It removes `disablepictureinpicture` before playback, including on videos added
+later, nested players, and attributes reapplied by the page. It leaves video
+position, width, and other layout properties intact and does not start a paused
+video merely to remove that attribute.
 
-Beim Start eines Videos wird im betreffenden Dokument die Page Visibility API auf
-„sichtbar“ gehalten und `visibilitychange` abgefangen. Das verhindert verbreitete
-Hintergrund-Pausen. Absichtliches Pausieren bleibt möglich. Ein Neuladen setzt
-diesen Schutz zurück. Andere Pause-Mechanismen eines Hosters werden nicht
-pauschal überschrieben.
+Once a video starts, the extension attempts to keep the document's Page Visibility
+API reporting **visible** and intercepts `visibilitychange`. This prevents common
+background-pause behavior while allowing intentional pauses. Reloading resets
+this protection. Other mechanisms used by a player to pause playback are not
+universally overridden.
 
-Meldet ein zuvor laufendes Video im Vollbild `MEDIA_ERR_DECODE`, lädt die
-Erweiterung bei JW Playern mit genau einem Playlist-Eintrag diesen Eintrag über
-die vorhandene Player-API neu. Direkt über HTTP geladene, unverschlüsselte Videos
-können stattdessen über ihre native Ladefunktion wiederhergestellt werden.
-Nach dem ersten wiedergegebenen Bild stellt sie
-die letzte Position wieder her. Das kann eine kurze Bildunterbrechung verursachen;
-ein Neuladen der ganzen Seite ist dafür nicht nötig. Die Erweiterung untersucht
-keine Medieninhalte und protokolliert oder speichert keine Stream-Adressen.
-Mehrteilige JW-Playlists und
-MediaSource-Player ohne unterstützte Player-API werden nicht neu geladen.
-Hat ein Player seine Wiedergabe bereits selbst wiederhergestellt, unterbleibt
-ein zusätzlicher Neustart durch die Erweiterung.
-Ein bereits bestehender Decodierungsfehler wird auch beim Eintritt ins Vollbild
-geprüft, damit ein zuvor ausgefallenes Video dort wieder anlaufen kann.
+If a previously playing fullscreen video reports `MEDIA_ERR_DECODE`, the
+extension can reload a JW Player item through the existing player API when its
+playlist contains exactly one item. An unencrypted video loaded directly over
+HTTP can instead recover through its native loading function. After playback
+resumes, the extension restores the previous position. This may cause a brief
+interruption without reloading the entire page. It neither inspects media content
+nor logs or stores stream addresses.
 
-Es gibt höchstens zwei Wiederherstellungsversuche innerhalb von 60 Sekunden.
-Eine Nutzerpause, Entfernen des Videos oder Verlassen des Vollbilds vor dem
-Wiederanlauf verhindert den Versuch. Eine Pause während des Ladens wird ebenfalls
-respektiert. Bei weiteren Fehlern oder ausbleibender Wiedergabe wird nicht
-unbegrenzt neu gestartet.
+Multi-item JW playlists and MediaSource players without a supported player API
+are not reloaded. If the player has already recovered itself, the extension does
+not restart it again. Existing decoding errors are also checked when entering
+fullscreen so a previously failed video can recover there.
 
-Das schwebende Fenster erzeugt Firefox zusammen mit Android. Ein Browser-Add-on
-kann den Android-Home-Schritt nicht selbst auslösen. Geschlossene Shadow-DOM-
-Player und reine Canvas-/DRM-Sonderplayer sind nicht unterstützt.
+Recovery is limited to two attempts within 60 seconds. Pausing, removing the
+video, or leaving fullscreen before recovery prevents that attempt. A pause while
+the video is loading is respected too. Persistent errors or missing playback do
+not cause unlimited restarts.
 
-Bei ausgeschaltetem oder gesperrtem Bildschirm kann die Tonwiedergabe im
-Hintergrund fortgesetzt werden. Ob sie weiterläuft, hängt auch vom Player und
-Androids Akku- und Hintergrundbeschränkungen ab. Das PiP-Bild ist dabei nicht
-sichtbar. Das Verhalten bei gesperrtem Bildschirm wurde auf dem Testgerät noch
-nicht geprüft; die Erweiterung ändert keine Sperrbildschirm- oder Akkueinstellungen.
+Firefox and Android create the floating window. A browser extension cannot press
+Android Home itself. Closed shadow-DOM players and specialized canvas or DRM
+players are not supported.
 
-## Referenzen und Lizenz
+With the screen off or locked, audio can continue, but the PiP picture is not
+visible. Playback also depends on the player and Android's battery and background
+network policies. On the test device, an Android `APP_BACKGROUND` network block
+prevented loading the next video. An automatic playlist transition succeeded with
+a temporary battery exemption for Firefox, after a loading pause. See the
+[setup guide](docs/ANDROID_SETUP.md#3-allow-unrestricted-background-usage) and
+[test report](TESTING.md#locked-screen-playback-and-background-network-access).
+The extension does not change lock-screen, battery, or network settings.
 
-- Technische Referenz: [mozilla/video-bg-play](https://github.com/mozilla/video-bg-play).
-  Eigenständige Implementierung, kein Fork und keine Mozilla-Zugehörigkeit.
-- Vergleich zur PiP-Freigabe: [Enable Picture-in-Picture](https://addons.mozilla.org/de/firefox/addon/enable-picture-in-picture/).
-  Die Freigabe hier verändert weder Videobreite noch CSS-Position.
-- [Mozilla: Videos und Bild-in-Bild auf Android](https://support.mozilla.org/en-US/kb/playing-videos-firefox-android)
-- [Mozilla: Android-Erweiterungen entwickeln](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/)
-- [Mozilla: Signierung und Verteilung](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/)
+## References and license
 
-MPL-2.0, siehe [LICENSE](LICENSE).
+- Technical reference: [mozilla/video-bg-play](https://github.com/mozilla/video-bg-play).
+  This is an independent implementation, not a fork or a Mozilla-affiliated project.
+- PiP attribute comparison: [Enable Picture-in-Picture](https://addons.mozilla.org/en-US/firefox/addon/enable-picture-in-picture/).
+  The implementation here changes neither video width nor CSS positioning.
+- [Mozilla: video playback and PiP on Android](https://support.mozilla.org/en-US/kb/playing-videos-firefox-android)
+- [Mozilla: develop extensions for Android](https://extensionworkshop.com/documentation/develop/developing-extensions-for-firefox-for-android/)
+- [Mozilla: signing and distribution](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/)
+
+MPL-2.0; see [LICENSE](LICENSE).
