@@ -3,6 +3,16 @@
 A small Firefox extension for Android that helps HTML5 videos keep playing in the
 background, including players embedded from other domains. It adds no buttons.
 
+## Install
+
+Install [HTML PiP Helper from Firefox Add-ons](https://addons.mozilla.org/de/firefox/addon/html-pip-helper/)
+in Firefox for Android.
+
+The Mozilla-signed version 0.1.3 is also available as a
+[GitHub release](https://github.com/ckbaker10/html-pip-helper/releases/tag/v0.1.3):
+[download the signed XPI](https://github.com/ckbaker10/html-pip-helper/releases/download/v0.1.3/html_pip_helper-0.1.3.xpi).
+The release includes `SHA256SUMS` to verify the download.
+
 ## Set up your phone
 
 Follow the [Android setup guide with screenshots](docs/ANDROID_SETUP.md) to install
@@ -56,20 +66,18 @@ Private tabs may require a separate extension permission.
 
 ## Install on Android without ADB
 
-First obtain a Mozilla-signed XPI for release Firefox:
+Open the [Firefox Add-ons listing](https://addons.mozilla.org/de/firefox/addon/html-pip-helper/)
+in Firefox for Android and install the extension. No developer account, ADB, or
+signing step is needed to install the published extension.
 
-1. Sign in to the [Mozilla Developer Hub](https://addons.mozilla.org/en-US/developers/addon/submit/distribution)
-   and submit a new add-on.
-2. Choose **On your own** for self-distribution without a public catalog listing.
-3. Upload `dist/html-pip-helper-0.1.3.xpi`, select Android compatibility, and finish
-   the submission. The JavaScript is readable, with no minification or compilation
-   from another source language.
-4. Download the signed XPI once signing and any required review are complete.
-5. Follow the [installation steps in the Android setup guide](docs/ANDROID_SETUP.md#1-install-and-enable-the-extension).
+Alternatively, download `html_pip_helper-0.1.3.xpi` from the
+[GitHub release](https://github.com/ckbaker10/html-pip-helper/releases/tag/v0.1.3)
+and follow the [file installation steps in the Android setup guide](docs/ANDROID_SETUP.md#1-install-and-enable-the-extension).
 
-The local build remains unsigned until this signing process is completed. Each
-new version must be signed again. Automatic updates for self-distributed packages
-are not configured in this version.
+The signed release file is separate from the unsigned `dist/html-pip-helper-0.1.3.xpi`
+produced by `npm run build`. Developers distributing their own builds must obtain
+Mozilla signing for each new version. Automatic updates for file installations
+are not configured in this version; use the Add-ons listing for store-managed updates.
 
 References: [submission](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/),
 [signing](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/),

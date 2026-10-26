@@ -1,5 +1,19 @@
 # Test report: 2026-10-22
 
+## Published package: 2026-10-26
+
+Version 0.1.3 is published on [Firefox Add-ons](https://addons.mozilla.org/de/firefox/addon/html-pip-helper/).
+The [GitHub release](https://github.com/ckbaker10/html-pip-helper/releases/tag/v0.1.3)
+provides the supplied Mozilla-signed `html_pip_helper-0.1.3.xpi` and `SHA256SUMS`.
+Its content script matches `extension/content.js` byte for byte, and its manifest
+matches `extension/manifest.json` after JSON parsing. The archive also contains
+Mozilla signature files. This packaging check does not repeat the Android tests
+recorded below.
+
+Signed XPI SHA-256:
+`1232420ed4c88c0cd43d9483658d34300e8a59d079dd19f2811981e3a207ceb0`.
+The unsigned local build and its historical hash below remain separate artifacts.
+
 ## Version 0.1.3
 
 Package: `dist/html-pip-helper-0.1.3.xpi`. Add-on ID:

@@ -15,9 +15,14 @@ versions and manufacturer interfaces.
 
 ## 1. Install and enable the extension
 
-Use a Mozilla-signed XPI for a permanent installation in release Firefox. The
-package produced by this repository's build command is unsigned; the
-[README explains signing and self-distribution](../README.md#install-on-android-without-adb).
+Open [HTML PiP Helper on Firefox Add-ons](https://addons.mozilla.org/de/firefox/addon/html-pip-helper/)
+in Firefox for Android, install it, and confirm the permissions. Check that the
+extension is enabled, then reload any video tabs that were already open.
+
+Alternatively, download the Mozilla-signed
+[`html_pip_helper-0.1.3.xpi` from the GitHub release](https://github.com/ckbaker10/html-pip-helper/releases/download/v0.1.3/html_pip_helper-0.1.3.xpi).
+The release also provides `SHA256SUMS`. The package produced by this repository's
+build command is unsigned; use the published signed file for permanent installation.
 
 To install a signed XPI from a file:
 
@@ -108,7 +113,7 @@ See the [test report](../TESTING.md#locked-screen-playback-and-background-networ
 | No floating window after pressing Home | Start playback first, enter fullscreen with the player's button, and check Firefox's PiP permission. |
 | The current item plays, but the next one waits until you unlock | Check **Allow background usage**, the **Unrestricted** battery mode, background data permissions, and the player's autoplay setting. |
 | Playback stops immediately when locking | Check background restrictions and that the extension is still installed and enabled. A manual media Play command can resume some players, but does not prove automatic transitions will work. |
-| The extension disappears after restarting Firefox | Temporary development installations do not persist. Use a signed XPI for normal use. |
+| The extension disappears after restarting Firefox | Temporary development installations do not persist. Install from [Firefox Add-ons](https://addons.mozilla.org/de/firefox/addon/html-pip-helper/) or use the signed release XPI. |
 | A private tab behaves differently | Check Firefox's permission for the extension to run in private browsing. |
 | The picture turns black after rapid Home or app switches | This can be a decoding error, separate from a background network block. Recovery is limited to supported players and sources; see the [README](../README.md#permissions-and-limitations). |
 
